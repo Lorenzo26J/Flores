@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Flores Amarillas</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* CONTENEDOR */
+#scene {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* INICIO */
+#inicio {
+    text-align: center;
+    cursor: pointer;
+}
+
+#inicio img {
+    width: 120px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    50% { transform: scale(1.1); }
+}
+
+/* MENSAJE */
+#mensaje {
+    display: none;
+    text-align: center;
+}
+
+#mensaje h1 {
+    font-size: 2.5rem;
+    color: #FFD700;
+    text-shadow: 0 0 20px yellow, 0 0 40px gold;
+}
+
+/* TEXTO EXTRA */
+#dedicatoria {
+    margin-top: 10px;
+    font-size: 1.5rem;
+    text-align: center;
+    text-shadow: 0 0 10px pink;
+}
+
+/* AVISO */
+#aviso {
+    margin-top: 8px;
+    font-size: 1rem;
+    color: #ccc;
+    min-height: 20px;
+}
+
+/* BOTÓN */
+#btnSorpresa {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: gold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    display: none;
+}
+
+/* SOL */
+.sol {
+    font-size: 120px;
+    margin-top: 30px;
+    animation: girar 10s linear infinite;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+/* LETRA */
+#letra {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.activa {
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
+}
+
+/* FLORES FULL SCREEN */
+.flor {
+    position: fixed;
+    top: -20px;
+    font-size: 22px;
+    pointer-events: none;
+    animation: caer linear infinite;
+}
+
+@keyframes caer {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="scene">
+
+<div id="inicio" onclick="iniciarTodo()">
+    <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png">
+    <p>Toca para iniciar</p>
+</div>
+
+<div id="mensaje">
+    <h1>🌻 Feliz día de las Flores Amarillas 🌻</h1>
+    <div id="dedicatoria">🐱 Para Kathy, la mejor guerrera de ojitos de gato 💛</div>
+    <div id="aviso"></div>
+    <button id="btnSorpresa" onclick="mostrarSorpresa()">💌 Abrir sorpresa</button>
+</div>
+
+<div class="sol">☀️</div>
+
+</div>
+
+<div id="letra"></div>
+
+<audio id="musica">
+<source src="file:///D:/DESCARGAS%20EN%20D/FLORES/The%20Walls-Chase%20Atlantic.mp3">
+</audio>
+
+<script>
+
+const audio = document.getElementById("musica");
+
+const mensajeAviso = "⏳ Espera 13 segundos ❤️ | 🎧 Escucha con audífonos";
+
+function escribirAviso(texto) {
+    const aviso = document.getElementById("aviso");
+    let i = 0;
+    aviso.innerHTML = "";
+
+    function escribir() {
+        if (i < texto.length) {
+            aviso.innerHTML += texto.charAt(i);
+            i++;
+            setTimeout(escribir, 40);
+        }
+    }
+
+    escribir();
+}
+
+function iniciarTodo() {
+
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("mensaje").style.display = "block";
+
+    escribirAviso(mensajeAviso);
+
+    audio.volume = 0.3;
+    audio.play();
+
+    lluviaFlores();
+
+    // mostrar botón después de 5s
+    setTimeout(() => {
+        document.getElementById("btnSorpresa").style.display = "inline-block";
+    }, 5000);
+
+    // ocultar aviso en 13s
+    setTimeout(() => {
+        document.getElementById("aviso").style.display = "none";
+    }, 13000);
+}
+
+/* 🌻 FLORES EN TODA LA PANTALLA */
+function lluviaFlores() {
+    setInterval(() => {
+        const flor = document.createElement("div");
+        flor.className = "flor";
+        flor.innerHTML = "🌻";
+
+        flor.style.left = Math.random() * 100 + "vw";
+        flor.style.animationDuration = (Math.random() * 4 + 3) + "s";
+
+        document.body.appendChild(flor);
+
+        setTimeout(() => flor.remove(), 7000);
+    }, 120);
+}
+
+/* 💌 SORPRESA */
+function mostrarSorpresa() {
+    alert("💛 Kathy, eres increíble. Nunca olvides lo especial que eres 🌻✨");
+}
+
+/* LETRA */
+const lyrics = [
+    { time: 13, text: "Sorry if I look a little lost" },
+    { time: 16, text: "I just keep my head up in the clouds" },
+    { time: 19, text: "Give it to her however she wants" },
+    { time: 22, text: "Told her that she gotta keep it down" }
+];
+
+let index = 0;
+
+audio.ontimeupdate = () => {
+    if (index < lyrics.length && audio.currentTime >= lyrics[index].time) {
+        mostrarLetra(lyrics[index].text);
+        index++;
+    }
+};
+
+function mostrarLetra(texto) {
+    const contenedor = document.getElementById("letra");
+    contenedor.innerHTML = "";
+
+    texto.split(" ").forEach((palabra, i) => {
+        const span = document.createElement("span");
+        span.textContent = palabra + " ";
+        contenedor.appendChild(span);
+
+        setTimeout(() => {
+            span.classList.add("activa");
+        }, i * 150);
+    });
+}
+
+</script>
+
+</body>
+</html>
