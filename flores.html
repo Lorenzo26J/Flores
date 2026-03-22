@@ -142,8 +142,9 @@ body {
 
 <div id="letra"></div>
 
+<!-- ✅ AQUÍ ESTÁ EL CAMBIO IMPORTANTE -->
 <audio id="musica">
-<source src="file:///D:/DESCARGAS%20EN%20D/FLORES/The%20Walls-Chase%20Atlantic.mp3">
+<source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -180,18 +181,16 @@ function iniciarTodo() {
 
     lluviaFlores();
 
-    // mostrar botón después de 5s
     setTimeout(() => {
         document.getElementById("btnSorpresa").style.display = "inline-block";
     }, 5000);
 
-    // ocultar aviso en 13s
     setTimeout(() => {
         document.getElementById("aviso").style.display = "none";
     }, 13000);
 }
 
-/* 🌻 FLORES EN TODA LA PANTALLA */
+/* 🌻 FLORES */
 function lluviaFlores() {
     setInterval(() => {
         const flor = document.createElement("div");
